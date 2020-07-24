@@ -22,7 +22,7 @@ public class GameCardUse {
     private String mAttribute;
 
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "useCard_decklist",joinColumns = {@JoinColumn(name = "card_id")},inverseJoinColumns = {@JoinColumn(name = "decklist_id")})
     //產出一個中間表叫做useCard_decklist，他的某一欄位跟本表的主鍵對應，另一個欄位與跟有使用JoinTable名字是useCard_decklist的表的主鍵對應
     private List<DeckList> deckLists;

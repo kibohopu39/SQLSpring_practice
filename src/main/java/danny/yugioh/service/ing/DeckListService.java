@@ -5,7 +5,7 @@ import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IPlayerRepository;
 import danny.yugioh.request.ChangeDeckName;
-import danny.yugioh.request.ChangeDeckOwner;
+import danny.yugioh.request.DeckNamePlayerRequest;
 import danny.yugioh.service.IDeckListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public class DeckListService implements IDeckListService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String changeDeckOwner(ChangeDeckOwner input) throws Exception {
+    public String changeDeckOwner(DeckNamePlayerRequest input) throws Exception {
         //先看玩家有沒有
         Optional<Player> tempplayer = playerRepository.findById(input.getPlayerId());
         if (!tempplayer.isPresent()) {

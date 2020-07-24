@@ -1,14 +1,13 @@
 package danny.yugioh.controller;
 
 import danny.yugioh.request.*;
+import danny.yugioh.response.PlayerDeck;
+import danny.yugioh.response.PlayerName;
 import danny.yugioh.service.IDeckListService;
 import danny.yugioh.service.IPlayerService;
 import danny.yugioh.service.IGameCardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -64,7 +63,7 @@ public class PlayerController {
     //多對一
     //修改牌組的持有人
     @PutMapping()
-    public String changeDeckOwner(ChangeDeckOwner input)throws Exception{
+    public String changeDeckOwner(DeckNamePlayerRequest input)throws Exception{
         return deckListService.changeDeckOwner(input);
     }
 
@@ -77,31 +76,40 @@ public class PlayerController {
 
     //一對一
     //刪除玩家
+    @DeleteMapping(value = "deleteplayer")
+    public String deletePlayer(int playId) throws Exception {
+        return playerService.deletePlayer(playId);
+    }
 
     //一對多
     //刪除某個牌組
+    @DeleteMapping(value = "deleteplayerDeck")
+    public String deletePlayerDeck(@RequestBody DeckNamePlayerRequest input)throws Exception{
+        return playerService.deletePlayerDeck(input);
+    }
 
-    //多對一
-    //刪除牌組的持有人
 
     //多對多
-    //刪除牌組的卡
-
+    //刪除牌組的卡--->到GameCardController
     //多對多
     //刪除牌組?阿這不是跟一對多一樣嗎?
 
     //一對一
-    //查詢某個玩家，或是各種由玩家資料搜尋的類型
-
+    //查詢某個玩家，或是各種由玩家資料搜尋的類型，此例為性別
+    @GetMapping(value = "queryPlayer")
+    public PlayerName queryPlayer(String gender){
+        return playerService.queryPlayer(gender);
+    }
     //一對多
     //查詢玩家某個牌組
+    @GetMapping(value = "queryPlayerDeck")
+    public PlayerDeck queryPlayerDeck(@RequestBody DeckNamePlayerRequest input) throws Exception{
+        return playerService.queryPlayerDeck(input);
+    }
 
-    //多對一
-    //查詢某個牌組的擁有者
 
     //多對多
-    //查詢牌組的卡
-
+    //查詢牌組的卡--->到GameCardController
     //多對多
     //查詢某張卡被放到那些牌組裡
 

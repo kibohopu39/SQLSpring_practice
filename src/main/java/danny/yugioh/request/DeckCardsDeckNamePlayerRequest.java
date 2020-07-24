@@ -3,7 +3,7 @@ package danny.yugioh.request;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-public class ChangeDeckListCard {
+public class DeckCardsDeckNamePlayerRequest {
     private List<String> cardsList;
     //想要修改誰的牌組
     @NotBlank

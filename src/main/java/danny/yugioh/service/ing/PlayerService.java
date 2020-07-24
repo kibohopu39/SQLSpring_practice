@@ -6,10 +6,9 @@ import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IDetailRepository;
 import danny.yugioh.repository.IPlayerRepository;
-import danny.yugioh.request.AddDuelDeckRequest;
-import danny.yugioh.request.AddPlayerRequest;
-import danny.yugioh.request.ChangeDuelistArea;
-import danny.yugioh.request.NewDeckOwner;
+import danny.yugioh.request.*;
+import danny.yugioh.response.PlayerDeck;
+import danny.yugioh.response.PlayerName;
 import danny.yugioh.service.IPlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,5 +130,73 @@ public class PlayerService implements IPlayerService {
         return "玩家認領牌組成功";
     }
 
+    @Override
+    public String deletePlayer(int playerId) throws Exception{
+        //直接刪除該名字的
+        Player player=cheackPlayer(playerId);
+        playerRepository.delete(player);
+        return "刪除玩家成功";
+    }
 
+    @Override
+    public String deletePlayerDeck(DeckNamePlayerRequest input) throws Exception {
+        //玩家在不?
+        Player player = cheackPlayer(input.getPlayerId());
+        //牌組在不?牌組要先跟玩家斷關係
+        List<String> deckNameList = input.getDeckNameList();
+        for (String deckname:deckNameList) {
+            DeckList deckList = cheackPlayerDeck(deckname, player);//傳出玩家符合要刪除的牌組
+            deckList.setDuelist(null);//先跟玩家斷關聯再刪掉
+            deckListRepository.delete(deckList);
+        }
+        return "刪除完成";
+    }
+
+    @Override
+    public PlayerName queryPlayer(String gender) {
+        List<Player> playersByGender = playerRepository.findPlayersByGender(gender);
+        PlayerName playerName = new PlayerName();
+        List<Player> outputplayers = playerName.getPlayers();
+        for (Player p:playersByGender) {
+            outputplayers.add(p);
+        }
+        return playerName;
+    }
+
+    @Override
+    public PlayerDeck queryPlayerDeck(DeckNamePlayerRequest input) throws Exception {
+        //玩家在否?
+        Player player = cheackPlayer(input.getPlayerId());
+        //牌組在不?
+        List<String> deckNameList = input.getDeckNameList();
+        //要回傳用的
+        PlayerDeck playerDeck = new PlayerDeck();
+        List<DeckList> deckLists = playerDeck.getDeckLists();
+        for (String deckname:deckNameList) {
+            DeckList deckList = cheackPlayerDeck(deckname, player);//傳出玩家符合的牌組
+            deckLists.add(deckList);
+        }
+        return playerDeck;
+    }
+
+
+    //方法1，判斷有無這個玩家
+    private Player cheackPlayer(Integer id) throws Exception {
+        Optional<Player> player = playerRepository.findById(id);
+        if (!player.isPresent()){
+            throw new Exception("沒有這個決鬥者");
+        }
+        return player.get();
+    }
+
+    //方法2，判斷玩家牌組清單有無這個牌組，有的話回傳該牌組
+    private DeckList cheackPlayerDeck(String deckname,Player player) throws Exception {
+        List<DeckList> deckLists = player.getDeckLists();//該玩家的牌組清單列表
+        for (DeckList i:deckLists) {//尋訪清單列表
+            if (i.getDeckname().equals(deckname)){//有對應的名字就傳回
+                return i;
+            }
+        }
+        throw new Exception("沒有這個牌組!");
+    }
 }

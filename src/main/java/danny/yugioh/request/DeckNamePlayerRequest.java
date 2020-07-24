@@ -1,10 +1,8 @@
 package danny.yugioh.request;
 
-import danny.yugioh.entity.DeckList;
-
 import java.util.List;
 
-public class ChangeDeckOwner {
+public class DeckNamePlayerRequest {
     //輸入的牌組名增
     //想要修改成哪位玩家持有
     List<String> deckNameList;
