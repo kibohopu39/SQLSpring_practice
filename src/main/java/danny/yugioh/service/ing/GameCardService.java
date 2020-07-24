@@ -47,7 +47,7 @@ public class GameCardService implements IGameCardService {
         DeckList newdecklist=new DeckList();
         newdecklist.setDeckname(input);
         deckListRepository.save(newdecklist);
-        return "新增孤兒牌組成功!請幫它找個主人~";
+        return "新增孤兒牌組成功!請幫它找個主人~"
     }
 
     @Override
