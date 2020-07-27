@@ -4,7 +4,7 @@ import danny.yugioh.entity.DeckList;
 
 import java.util.List;
 
-public class PlayerDeck {
+public class PlayerDeckResponse {
     //回傳出玩家的牌組
     List<DeckList> deckLists;
 

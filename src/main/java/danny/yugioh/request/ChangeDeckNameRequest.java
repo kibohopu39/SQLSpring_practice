@@ -1,6 +1,6 @@
 package danny.yugioh.request;
 
-public class ChangeDeckName {
+public class ChangeDeckNameRequest {
     //輸入要修改的牌組名
     //輸入要修改的對象
     //輸入要修改牌組的持有玩家Id

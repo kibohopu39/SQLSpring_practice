@@ -1,15 +1,17 @@
 package danny.yugioh.controller;
 
 import danny.yugioh.request.*;
-import danny.yugioh.response.PlayerDeck;
-import danny.yugioh.response.PlayerName;
+import danny.yugioh.response.PlayerDeckResponse;
+import danny.yugioh.response.PlayerNameResponse;
 import danny.yugioh.service.IDeckListService;
-import danny.yugioh.service.IPlayerService;
 import danny.yugioh.service.IGameCardService;
+import danny.yugioh.service.IPlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class PlayerController {
@@ -37,7 +39,7 @@ public class PlayerController {
     //新增牌組的持有者?(這種情況很怪，如果玩家在原本的資料庫裡的話，就是建立關聯)
     //首先去新增一副沒有持有者的牌組----->到GameCardController
     @PostMapping(value = "newDeckOwner")
-    public String newDeckOwner(@RequestBody @Valid NewDeckOwner input) throws Exception{
+    public String newDeckOwner(@RequestBody @Valid NewDeckOwnerRequest input) throws Exception{
         return playerService.newDeckOwner(input);
 }
     //多對多
@@ -49,14 +51,14 @@ public class PlayerController {
     // 一對一
     // 修改決鬥者的資訊(目前只有放Area)
     @PutMapping(value = "changeArea")
-    public String changeArea(@RequestBody ChangeDuelistArea input)throws Exception{
+    public String changeArea(@RequestBody ChangeDuelistAreaRequest input)throws Exception{
         return playerService.changeArea(input);
     }
 
     // 一對多
     // 修改決鬥者的牌組名稱
     @PutMapping(value = "newDeckList")
-    public String newDeckName(@RequestBody ChangeDeckName input) throws Exception{
+    public String newDeckName(@RequestBody ChangeDeckNameRequest input) throws Exception{
         return deckListService.changeDeckName(input);
     }
 
@@ -97,13 +99,13 @@ public class PlayerController {
     //一對一
     //查詢某個玩家，或是各種由玩家資料搜尋的類型，此例為性別
     @GetMapping(value = "queryPlayer")
-    public PlayerName queryPlayer(String gender){
+    public PlayerNameResponse queryPlayer(String gender){
         return playerService.queryPlayer(gender);
     }
     //一對多
     //查詢玩家某個牌組
     @GetMapping(value = "queryPlayerDeck")
-    public PlayerDeck queryPlayerDeck(@RequestBody DeckNamePlayerRequest input) throws Exception{
+    public PlayerDeckResponse queryPlayerDeck(@RequestBody DeckNamePlayerRequest input) throws Exception{
         return playerService.queryPlayerDeck(input);
     }
 
@@ -113,4 +115,26 @@ public class PlayerController {
     //多對多
     //查詢某張卡被放到那些牌組裡
 
+
+    //===============================================7/27==========================================================
+    //任務: 寫一個同時修改玩家名字與卡包的方法
+    //玩家存玩家，卡包存卡包，因此需要寫一個卡包存卡包的方法給這個方法引用
+    @PutMapping(value = "changePlayerAndDeck")
+    public int changePlayerAndDeck(@RequestBody PlayerAndDeckRequest input) throws Exception{
+        return playerService.changePlayerAndDeck(input);
+    }
+    //=========用用看 Stream
+    @GetMapping(value = "hey")
+    public List<String> testStream(@RequestBody List<String> input){
+        List<String> filtered = input.stream().filter(string -> !string.isBlank()).collect(Collectors.toList());
+
+        return filtered;
+    }
+    //========用用看 Stream 猜選並搜尋符合條件的第一筆結果
+    @GetMapping(value = "findMatchGamePlayer")
+    public String findMatchGamePlayer()throws Exception{
+
+
+        return "";
+    }
 }

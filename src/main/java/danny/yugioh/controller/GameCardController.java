@@ -1,10 +1,9 @@
 package danny.yugioh.controller;
 
 import danny.yugioh.entity.DeckList;
-import danny.yugioh.entity.GameCardUse;
 import danny.yugioh.entity.Player;
 import danny.yugioh.request.AddCardRequest;
-import danny.yugioh.request.AddDeckCards;
+import danny.yugioh.request.AddDeckCardsRequest;
 import danny.yugioh.request.DeckCardsDeckNamePlayerRequest;
 import danny.yugioh.request.DeckNamePlayerRequest;
 import danny.yugioh.service.IGameCardService;
@@ -49,7 +48,7 @@ public class GameCardController {
     //多對多
     //新增牌組裡面的卡
     @PostMapping(value = "newDeckCard")
-    public String newDeckCards(@RequestBody @Valid AddDeckCards input)throws Exception{
+    public String newDeckCards(@RequestBody @Valid AddDeckCardsRequest input)throws Exception{
         return gameCardService.AddDeckCards(input);
     }
     //多對多
@@ -69,8 +68,7 @@ public class GameCardController {
     //多對多
     //查詢有放輸入卡片的所有牌組
     @GetMapping(value = "queryDeckCard")
-    public List<DeckList> queryDeckCard(@RequestBody List<String> Cards) throws Exception{
-        return gameCardService.queryDeckCard(Cards);
+    public void queryDeckCard(@RequestBody List<String> Cards) throws Exception{
 
     }
     //多對多

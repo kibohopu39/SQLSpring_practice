@@ -1,6 +1,6 @@
 package danny.yugioh.request;
 
-public class ChangeDuelistArea {
+public class ChangeDuelistAreaRequest {
     //輸入要更改的決鬥者名稱ID
     //輸入要更改的地區
     private int id;

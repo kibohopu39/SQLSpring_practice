@@ -7,7 +7,7 @@ import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IGameCardRepository;
 import danny.yugioh.repository.IPlayerRepository;
 import danny.yugioh.request.AddCardRequest;
-import danny.yugioh.request.AddDeckCards;
+import danny.yugioh.request.AddDeckCardsRequest;
 import danny.yugioh.request.DeckCardsDeckNamePlayerRequest;
 import danny.yugioh.request.DeckNamePlayerRequest;
 import danny.yugioh.service.IGameCardService;
@@ -53,7 +53,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
-    public String AddDeckCards(AddDeckCards input) throws Exception {
+    public String AddDeckCards(AddDeckCardsRequest input) throws Exception {
         //先確認人，再確認牌組名，最後確認卡
         Player tempplayer = cheackPlayer(input.getPlayerId());
         List<DeckList> finddeckLists = tempplayer.getDeckLists();//該玩家的牌組清單
@@ -154,7 +154,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
-    public List<DeckList> queryDeckCard(List<String> Cards) throws Exception {
+    public void queryDeckCard(List<String> Cards) throws Exception {
         //先看看這些卡是否合法
         List<GameCardUse> cardUseList = correctCardListFilter(Cards);
         List<DeckList> deckLists=new ArrayList<>();

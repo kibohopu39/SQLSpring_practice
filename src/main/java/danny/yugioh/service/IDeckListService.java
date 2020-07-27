@@ -1,9 +1,12 @@
 package danny.yugioh.service;
 
-import danny.yugioh.request.ChangeDeckName;
+import danny.yugioh.entity.DeckList;
+import danny.yugioh.request.ChangeDeckNameRequest;
 import danny.yugioh.request.DeckNamePlayerRequest;
+import danny.yugioh.request.PlayerAndDeckRequest;
 
 public interface IDeckListService {
-    String changeDeckName(ChangeDeckName input)throws Exception;
+    String changeDeckName(ChangeDeckNameRequest input)throws Exception;
     String changeDeckOwner(DeckNamePlayerRequest input)throws Exception;
+    void changeDeckName(PlayerAndDeckRequest input, DeckList deckList);
 }

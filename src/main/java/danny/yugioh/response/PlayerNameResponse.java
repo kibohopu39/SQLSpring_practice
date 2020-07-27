@@ -4,7 +4,7 @@ import danny.yugioh.entity.Player;
 
 import java.util.List;
 
-public class PlayerName {
+public class PlayerNameResponse {
     //回傳符合條件的player
     List<Player> players;
 

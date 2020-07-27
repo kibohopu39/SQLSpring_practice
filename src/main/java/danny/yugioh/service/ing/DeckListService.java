@@ -4,8 +4,9 @@ import danny.yugioh.entity.DeckList;
 import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IPlayerRepository;
-import danny.yugioh.request.ChangeDeckName;
+import danny.yugioh.request.ChangeDeckNameRequest;
 import danny.yugioh.request.DeckNamePlayerRequest;
+import danny.yugioh.request.PlayerAndDeckRequest;
 import danny.yugioh.service.IDeckListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class DeckListService implements IDeckListService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String changeDeckName(ChangeDeckName input) throws Exception {
+    public String changeDeckName(ChangeDeckNameRequest input) throws Exception {
         //看玩家名
         Optional<Player> byId = playerRepository.findById(input.getPlaeyId());
         if (!byId.isPresent()) {
@@ -55,15 +56,24 @@ public class DeckListService implements IDeckListService {
         List<DeckList> player1DeckLists = player1.getDeckLists();
         //再看看輸入的牌組是不是真的存在
         List<String> deckNameLists = input.getDeckNameList();
-        for (String i:deckNameLists) {
+        for (String i : deckNameLists) {
             List<DeckList> deckLists = deckListRepository.findallByname(i);
-            if (!deckLists.isEmpty()){
+            if (!deckLists.isEmpty()) {
                 throw new Exception("輸入的牌組不存在!");
             }
         }//其實隱含一個問題，就是這樣會打破之前設下的規矩，一個人的牌組名稱不可以一樣，但修改過去很有可能是兩副相同名稱的牌組
         //最後看修改的持有人是不是已經有相同的牌組名稱
 
         return null;
+    }
+
+    @Override
+    public void changeDeckName(PlayerAndDeckRequest input, DeckList deckList) {
+        //直接改指定玩家的卡包名稱，因為前面已經都檢查過了
+        deckList.setDeckname(input.getNewdeckname());
+//        Player duelist = deckList.getDuelist();
+//        playerRepository.save(duelist);
+        deckListRepository.save(deckList);
     }
 
 
