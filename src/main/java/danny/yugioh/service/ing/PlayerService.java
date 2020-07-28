@@ -30,7 +30,7 @@ public class PlayerService implements IPlayerService {
     IDeckListService deckListService;
 
     @Override
-    public String newDuelist(NewPlayerRequest input) {
+    public java.lang.String newDuelist(NewPlayerRequest input) {
         Player player = new Player();
         player.setAge(input.getAge());
         player.setName(input.getName());
@@ -49,7 +49,7 @@ public class PlayerService implements IPlayerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String newDuelDeck(AddDuelDeckRequest input) throws Exception {
+    public java.lang.String newDuelDeck(AddDuelDeckRequest input) throws Exception {
         //要先看新增的決鬥者名字有沒有先登入在資料庫裡
         Player tempplayer = cheackPlayer(input.getDuelistId());
         //問新增的牌組名稱是不是重複新增了
@@ -72,21 +72,26 @@ public class PlayerService implements IPlayerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String changeArea(ChangeDuelistAreaRequest input) throws Exception {
-        //先看要改的玩家
-        Optional<Player> tempduelist = playerRepository.findById(input.getId());
-        if (!tempduelist.isPresent()) {
-            throw new Exception("您要新增的決鬥者不存在");
-        }
-        Detail detail = tempduelist.get().getDetail();
+    public java.lang.String changePlayer(ChangePlayerRequest input) throws Exception {
+        //檢查是否存在
+        Player player = cheackPlayer(input.getId());
+        //先改 副表
+        Detail detail = player.getDetail();
         detail.setArea(input.getArea());
+        detail.setGender(input.getGender());
         detailRepository.save(detail);
-        return "修改居住地區成功";
+        //改主表
+        player.setName(input.getName());
+        player.setAge(input.getAge());
+        player.setRank(input.getScore());
+        playerRepository.save(player);
+
+        return "修改玩家資料成功";
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String newDeckOwner(NewDeckOwnerRequest input) throws Exception {
+    public java.lang.String newDeckOwner(NewDeckOwnerRequest input) throws Exception {
         //先看玩家
         Optional<Player> tempplayer = playerRepository.findById(input.getPlayerId());
         if (!tempplayer.isPresent()) {
@@ -117,12 +122,11 @@ public class PlayerService implements IPlayerService {
         deckList.setDuelist(duelist);//設置玩家
         deckListRepository.save(deckList);//儲存
 
-
         return "玩家認領牌組成功";
     }
 
     @Override
-    public String deletePlayer(int playerId) throws Exception {
+    public java.lang.String deletePlayer(Integer playerId) throws Exception {
         //直接刪除該名字的
         Player player = cheackPlayer(playerId);
         playerRepository.delete(player);
@@ -130,12 +134,12 @@ public class PlayerService implements IPlayerService {
     }
 
     @Override
-    public String deletePlayerDeck(DeckNamePlayerRequest input) throws Exception {
+    public java.lang.String deletePlayerDeck(DeletePlayerDeckRequest input) throws Exception {
         //玩家在不?
         Player player = cheackPlayer(input.getPlayerId());
         //牌組在不?牌組要先跟玩家斷關係
-        List<String> deckNameList = input.getDeckNameList();
-        for (String deckname : deckNameList) {
+        List<java.lang.String> deckNameList = input.getDeckNameList();
+        for (java.lang.String deckname : deckNameList) {
             DeckList deckList = cheackPlayerDeck(deckname, player);//傳出玩家符合要刪除的牌組
             deckList.setDuelist(null);//先跟玩家斷關聯再刪掉
             deckListRepository.delete(deckList);
@@ -144,26 +148,27 @@ public class PlayerService implements IPlayerService {
     }
 
     @Override
-    public PlayerNameResponse queryPlayer(String gender) {
+    public PlayerNameResponse queryPlayer(java.lang.String gender) {
+        //查詢到符合的玩家
         List<Player> playersByGender = playerRepository.findPlayersByGender(gender);
-        PlayerNameResponse playerName = new PlayerNameResponse();
-        List<Player> outputplayers = playerName.getPlayers();
+        PlayerNameResponse playerName = new PlayerNameResponse();//傳出的東西
+        List<String> outputplayers = playerName.getPlayers();
         for (Player p : playersByGender) {
-            outputplayers.add(p);
+            outputplayers.add(p.getName());
         }
         return playerName;
     }
 
     @Override
-    public PlayerDeckResponse queryPlayerDeck(DeckNamePlayerRequest input) throws Exception {
+    public PlayerDeckResponse queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception {
         //玩家在否?
         Player player = cheackPlayer(input.getPlayerId());
         //牌組在不?
-        List<String> deckNameList = input.getDeckNameList();
+        List<java.lang.String> deckNameList = input.getDeckNameList();
         //要回傳用的
         PlayerDeckResponse playerDeck = new PlayerDeckResponse();
         List<DeckList> deckLists = playerDeck.getDeckLists();
-        for (String deckname : deckNameList) {
+        for (java.lang.String deckname : deckNameList) {
             DeckList deckList = cheackPlayerDeck(deckname, player);//傳出玩家符合的牌組
             deckLists.add(deckList);
         }
@@ -207,7 +212,7 @@ public class PlayerService implements IPlayerService {
     }
 
     //方法2，判斷玩家牌組清單有無這個牌組，有的話回傳該牌組
-    private DeckList cheackPlayerDeck(String deckname, Player player) throws Exception {
+    private DeckList cheackPlayerDeck(java.lang.String deckname, Player player) throws Exception {
         List<DeckList> deckLists = player.getDeckLists();//該玩家的牌組清單列表
         for (DeckList i : deckLists) {//尋訪清單列表
             if (i.getDeckname().equals(deckname)) {//有對應的名字就傳回

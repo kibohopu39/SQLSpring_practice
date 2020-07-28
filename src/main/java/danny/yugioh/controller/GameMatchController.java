@@ -1,6 +1,5 @@
 package danny.yugioh.controller;
 
-import danny.yugioh.entity.GameMatch;
 import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IGameMatchRepository;
 import danny.yugioh.repository.IPlayerRepository;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 public class GameMatchController {
@@ -26,18 +24,18 @@ public class GameMatchController {
     IPlayerRepository playerRepository;
     //賽事與玩家建立關聯
     @PutMapping(value = "joinGame")
-    public String joinGame(@RequestBody GamePlayerRequest input)throws Exception{
+    public java.lang.String joinGame(@RequestBody GamePlayerRequest input)throws Exception{
         return gameMatchService.joinGame(input);
     }
     //========用用看 Stream 猜選並搜尋符合條件的結果
     @GetMapping(value = "findMatchGamePlayer")
-    public String findMatchGamePlayer()throws Exception{
+    public java.lang.String findMatchGamePlayer()throws Exception{
         //我要找台南2001店家賽的參賽選手
         Optional<Player> byId = playerRepository.findById(1);
         Player player = byId.get();
-        List<String> gameMatches = gameMatchRepository.gofingGameMatches(player);
+        List<java.lang.String> gameMatches = gameMatchRepository.gofingGameMatches(player);
 //        List<GameMatch> collect = gameMatches.stream().filter(name -> !"台南2001店家賽".equals(name)).collect(Collectors.toList());
-        String s = gameMatches.get(0);
+        java.lang.String s = gameMatches.get(0);
         return s;
     }
 }

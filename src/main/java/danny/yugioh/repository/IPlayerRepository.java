@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface IPlayerRepository extends JpaRepository<Player,Integer> {
-    @Query(value = "SELECT * FROM duelist JOIN detail USING(id) WHERE gender LIKE:GENDER",nativeQuery = true)
-    List<Player> findPlayersByGender(@Param("GENDER") String inputgender);
+    @Query(value = "SELECT * FROM duelist JOIN detail USING(id) WHERE gender LIKE:gender",nativeQuery = true)
+    List<Player> findPlayersByGender(@Param("gender") String gender);
 }

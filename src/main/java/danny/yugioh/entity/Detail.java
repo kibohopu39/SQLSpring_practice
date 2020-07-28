@@ -9,9 +9,9 @@ public class Detail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "livingArea",length = 20)
-    private String area;
+    private java.lang.String area;
     @Column(name = "gender",length = 10)
-    private String gender;
+    private java.lang.String gender;
 
     @OneToOne(mappedBy = "detail")
     private Player duelist;
@@ -24,19 +24,19 @@ public class Detail {
         this.id = id;
     }
 
-    public String getArea() {
+    public java.lang.String getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(java.lang.String area) {
         this.area = area;
     }
 
-    public String getGender() {
+    public java.lang.String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(java.lang.String gender) {
         this.gender = gender;
     }
 

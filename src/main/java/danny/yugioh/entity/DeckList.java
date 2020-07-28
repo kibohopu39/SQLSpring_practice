@@ -10,7 +10,7 @@ public class DeckList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "deckname",length = 30)
-    private String deckname;
+    private java.lang.String deckname;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "duelist_id")
@@ -29,11 +29,11 @@ public class DeckList {
         this.id = id;
     }
 
-    public String getDeckname() {
+    public java.lang.String getDeckname() {
         return deckname;
     }
 
-    public void setDeckname(String deckname) {
+    public void setDeckname(java.lang.String deckname) {
         this.deckname = deckname;
     }
 

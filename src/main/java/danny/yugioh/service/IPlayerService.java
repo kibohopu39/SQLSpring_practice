@@ -9,17 +9,17 @@ public interface IPlayerService {
 
     String newDuelDeck(AddDuelDeckRequest input) throws Exception;
 
-    String changeArea(ChangeDuelistAreaRequest input) throws Exception;
+    String changePlayer(ChangePlayerRequest input) throws Exception;
 
     String newDeckOwner(NewDeckOwnerRequest input) throws Exception;
 
-    String deletePlayer(int playerId) throws Exception;
+    String deletePlayer(Integer playerId) throws Exception;
 
-    String deletePlayerDeck(DeckNamePlayerRequest input) throws Exception;
+    String deletePlayerDeck(DeletePlayerDeckRequest input) throws Exception;
 
     PlayerNameResponse queryPlayer(String gender);
 
-    PlayerDeckResponse queryPlayerDeck(DeckNamePlayerRequest input) throws Exception;
+    PlayerDeckResponse queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception;
 
     int changePlayerAndDeck(PlayerAndDeckRequest input) throws Exception;
 }

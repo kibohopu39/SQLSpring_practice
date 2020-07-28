@@ -7,12 +7,13 @@ import danny.yugioh.response.NewDeckCardsResponse;
 import java.util.List;
 
 public interface IGameCardService {
-    String newCard(NewCardUseRequest input) throws Exception;
+    java.lang.String newCard(NewCardUseRequest input) throws Exception;
+    java.lang.String newCardpic(Long data)throws Exception;
     NewDeckCardsResponse newDeckCards(NewDeckCardsRequest input)throws Exception;
-    String changeDeckListCard(DeckCardsDeckNamePlayerRequest input) throws Exception;
-    String newNoPlayerDeck(String input);
-    String deleteDeckPlayer(DeckNamePlayerRequest input)throws Exception;
-    String deleteDeckCard( DeckCardsDeckNamePlayerRequest input) throws Exception;
-    List<Player> queryDeckPlayer(String deckname)throws Exception;
-    void queryDeckCard(List<String> Cards) throws Exception;
+    java.lang.String changeDeckListCard(DeckCardsDeckNamePlayerRequest input) throws Exception;
+    java.lang.String newNoPlayerDeck(java.lang.String input);
+    java.lang.String deleteDeckPlayer(DeletePlayerDeckRequest input)throws Exception;
+    java.lang.String deleteDeckCard(DeckCardsDeckNamePlayerRequest input) throws Exception;
+    List<Player> queryDeckPlayer(java.lang.String deckname)throws Exception;
+    void queryDeckCard(List<java.lang.String> Cards) throws Exception;
 }

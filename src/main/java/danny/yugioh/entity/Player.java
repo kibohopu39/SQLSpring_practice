@@ -12,11 +12,11 @@ public class Player implements Serializable {
     private int id;
 
     @Column(name="name",length = 11)
-    private String name;
+    private java.lang.String name;
     @Column(name = "age",length = 10)
     private int age;
     @Column(name = "eamil",length = 40)
-    private String email;
+    private java.lang.String email;
     @Column(name = "rankpoint",length = 255)
     private int rank;
 
@@ -39,11 +39,11 @@ public class Player implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public java.lang.String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(java.lang.String name) {
         this.name = name;
     }
 
@@ -55,11 +55,11 @@ public class Player implements Serializable {
         this.age = age;
     }
 
-    public String getEmail() {
+    public java.lang.String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(java.lang.String email) {
         this.email = email;
     }
 

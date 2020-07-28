@@ -9,7 +9,6 @@ import danny.yugioh.service.IGameMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public class GameMatchService implements IGameMatchService {
     @Autowired
     IGameMatchRepository gameMatchRepository;
     @Override
-    public String joinGame(GamePlayerRequest input) throws Exception {
+    public java.lang.String joinGame(GamePlayerRequest input) throws Exception {
         //檢查玩家在不在，
         Player player = cheackPlayer(input.getPlayerId());
         GameMatch gameMatch = cheackGameMatch(input.getGame());
@@ -40,7 +39,7 @@ public class GameMatchService implements IGameMatchService {
         return player.get();
     }
     //方法2，判斷有無這個玩家
-    private GameMatch cheackGameMatch(String gameMatchName) throws Exception {
+    private GameMatch cheackGameMatch(java.lang.String gameMatchName) throws Exception {
         Optional<GameMatch> gameMatch = gameMatchRepository.findallByname(gameMatchName);
         if (!gameMatch.isPresent()) {
             throw new Exception("沒有這個賽事");

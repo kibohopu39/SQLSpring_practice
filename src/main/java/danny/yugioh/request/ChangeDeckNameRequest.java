@@ -4,7 +4,7 @@ public class ChangeDeckNameRequest {
     //輸入要修改的牌組名
     //輸入要修改的對象
     //輸入要修改牌組的持有玩家Id
-    int plaeyId;
+    Integer playId;
     String deckname;
     String target;
 
@@ -16,12 +16,12 @@ public class ChangeDeckNameRequest {
         this.target = target;
     }
 
-    public int getPlaeyId() {
-        return plaeyId;
+    public int getPlayId() {
+        return playId;
     }
 
-    public void setPlaeyId(int plaeyId) {
-        this.plaeyId = plaeyId;
+    public void setPlayId(int plaeyId) {
+        this.playId = plaeyId;
     }
 
     public String getDeckname() {
