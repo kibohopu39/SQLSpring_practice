@@ -1,12 +1,11 @@
 package danny.yugioh.service;
 
-import danny.yugioh.entity.Player;
 import danny.yugioh.request.*;
 import danny.yugioh.response.PlayerDeckResponse;
 import danny.yugioh.response.PlayerNameResponse;
 
 public interface IPlayerService {
-    String newDuelist(AddPlayerRequest input);
+    String newDuelist(NewPlayerRequest input);
 
     String newDuelDeck(AddDuelDeckRequest input) throws Exception;
 

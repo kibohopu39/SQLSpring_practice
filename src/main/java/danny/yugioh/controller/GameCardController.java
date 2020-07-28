@@ -1,11 +1,8 @@
 package danny.yugioh.controller;
 
-import danny.yugioh.entity.DeckList;
 import danny.yugioh.entity.Player;
-import danny.yugioh.request.AddCardRequest;
-import danny.yugioh.request.AddDeckCardsRequest;
-import danny.yugioh.request.DeckCardsDeckNamePlayerRequest;
-import danny.yugioh.request.DeckNamePlayerRequest;
+import danny.yugioh.request.*;
+import danny.yugioh.response.NewDeckCardsResponse;
 import danny.yugioh.service.IGameCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +18,18 @@ public class GameCardController {
     //一對一
     //新增可用卡片池
     @PostMapping(value = "newcard")
-    public String newCard(@RequestBody @Valid AddCardRequest input) throws Exception{
-        return gameCardService.newCard(input);
-    }
-    //不屬於任何分類
+    public String newCard(@RequestBody @Valid NewCardUseRequest input) throws Exception{ return gameCardService.newCard(input);    }
     //單純新增沒有持有者的牌組(你可以新增一個跟別人重複名稱的牌組)
     @PostMapping(value = "newNoPlayerDeck")
     public String newNoPlayerDeck(@RequestBody String input){
         return gameCardService.newNoPlayerDeck(input);
     }
+    //多對多
+    //新增指定牌組內的卡片(就是卡片跟牌組建立關聯)
+    @PutMapping(value = "newDeckCards")
+    public NewDeckCardsResponse newDeckCards(@RequestBody NewDeckCardsRequest input)throws Exception{return gameCardService.newDeckCards(input);    }
+
+
 
     //多對一
     //刪除牌組的持有人
@@ -45,12 +45,8 @@ public class GameCardController {
     }
 
 
-    //多對多
-    //新增牌組裡面的卡
-    @PostMapping(value = "newDeckCard")
-    public String newDeckCards(@RequestBody @Valid AddDeckCardsRequest input)throws Exception{
-        return gameCardService.AddDeckCards(input);
-    }
+
+
     //多對多
     //修改指定決鬥者牌組的卡片--->請問你跟上面那位不是一樣嗎?
     @PutMapping(value = "changedeckcard")

@@ -30,7 +30,7 @@ public class PlayerService implements IPlayerService {
     IDeckListService deckListService;
 
     @Override
-    public String newDuelist(AddPlayerRequest input) {
+    public String newDuelist(NewPlayerRequest input) {
         Player player = new Player();
         player.setAge(input.getAge());
         player.setName(input.getName());
@@ -51,35 +51,22 @@ public class PlayerService implements IPlayerService {
     @Transactional(rollbackFor = Exception.class)
     public String newDuelDeck(AddDuelDeckRequest input) throws Exception {
         //要先看新增的決鬥者名字有沒有先登入在資料庫裡
-        Optional<Player> tempplayer = playerRepository.findById(input.getDuelistId());
-        if (!tempplayer.isPresent()) {
-            throw new Exception("您要新增的決鬥者不存在!");
-        }
+        Player tempplayer = cheackPlayer(input.getDuelistId());
         //問新增的牌組名稱是不是重複新增了
-        List<DeckList> tempDecklist = tempplayer.get().getDeckLists();//拿查詢到的決鬥者，獲取其牌組清單
+        List<DeckList> tempDecklist = tempplayer.getDeckLists();//拿查詢到的決鬥者，獲取其牌組清單以便尋訪得知牌組名稱
         for (DeckList dl : tempDecklist) {//尋訪牌組清單
             if (dl.getDeckname().equals(input.getDeckname())) {//比較是否有跟輸入的牌組名稱一樣
                 throw new Exception("該牌組已經存在囉!");
             }
         }
-        //可以新增了
-
-
-        Player duelist = tempplayer.get();//獲取該符合的決鬥者
+        //新增
         //DeckList 卡包
         //duelist 玩家
 
         DeckList deckList = new DeckList();
         deckList.setDeckname(input.getDeckname());//去設置本次要新增的牌組內容
-//        deckListRepository.save(deckList);
-//        duelist.getDeckLists().add(deckList);
-//        tempDecklist.add(deckList);
-//        duelist.setDeckLists(tempDecklist);
-//
-//        duelistRepository.save(duelist);
-        deckList.setDuelist(duelist);//設置玩家
+        deckList.setDuelist(tempplayer);//跟玩家建立關聯
         deckListRepository.save(deckList);//儲存
-
         return "新增牌組清單成功";
     }
 

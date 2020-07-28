@@ -2,7 +2,7 @@ package danny.yugioh.request;
 
 import javax.validation.constraints.NotBlank;
 
-public class AddPlayerRequest {
+public class NewPlayerRequest {
     //輸入要包含的資料
     private int age;
     @NotBlank

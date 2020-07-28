@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @RestController
 public class PlayerController {
-    //前端進來什麼要求，如想要知道某玩家使用了什麼牌
     @Autowired
     IPlayerService playerService;
     @Autowired
@@ -24,28 +23,22 @@ public class PlayerController {
     IDeckListService deckListService;
 
     //一對一
-    //新增一個新的決鬥者(問題:可以重複人名新增)
-    @PostMapping(value = "newduelist")
-    public String newDuelist(@RequestBody @Valid AddPlayerRequest input){
-        return playerService.newDuelist(input);
-    }
+    //新增一個新的決鬥者(問題:可以重複人名新增，不能確保是不是不同人)
+    @PostMapping(value = "newplayer")
+    public String newDuelist(@RequestBody @Valid NewPlayerRequest input){ return playerService.newDuelist(input); }
     //一對多
     //新增決鬥者的牌組清單(牌組名字不能重複新增，一次加一副牌組名稱)
-    @PostMapping(value = "newdueldeck")
-    public String newDeck(@RequestBody @Valid AddDuelDeckRequest input) throws Exception {
-        return playerService.newDuelDeck(input);
-    }
+    @PostMapping(value = "newdueldecks")
+    public String newDeck(@RequestBody @Valid AddDuelDeckRequest input) throws Exception { return playerService.newDuelDeck(input);    }
     //多對一
-    //新增牌組的持有者?(這種情況很怪，如果玩家在原本的資料庫裡的話，就是建立關聯)
-    //首先去新增一副沒有持有者的牌組----->到GameCardController
+    //新增牌組的持有者?(這種情況很怪，如果玩家在原本的資料庫裡的話，就是建立牌組跟玩家的關聯)
+    //首先去新增一副沒有持有者的牌組----->到 GameCardController
     @PostMapping(value = "newDeckOwner")
-    public String newDeckOwner(@RequestBody @Valid NewDeckOwnerRequest input) throws Exception{
-        return playerService.newDeckOwner(input);
-}
+    public String newDeckOwner(@RequestBody @Valid NewDeckOwnerRequest input) throws Exception{ return playerService.newDeckOwner(input);}
     //多對多
     //新增牌組裡面的卡--->到GameCardController
     //多對多
-    //新增一堆卡的牌組名稱(這啥?)--->沒這種情況吧~
+    //新增一堆卡的牌組名稱(這啥?為孤兒牌組命名?)---> 沒這種情況吧~
 
 
     // 一對一
@@ -130,11 +123,5 @@ public class PlayerController {
 
         return filtered;
     }
-    //========用用看 Stream 猜選並搜尋符合條件的第一筆結果
-    @GetMapping(value = "findMatchGamePlayer")
-    public String findMatchGamePlayer()throws Exception{
 
-
-        return "";
-    }
 }

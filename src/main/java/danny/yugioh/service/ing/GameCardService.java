@@ -6,13 +6,12 @@ import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IGameCardRepository;
 import danny.yugioh.repository.IPlayerRepository;
-import danny.yugioh.request.AddCardRequest;
-import danny.yugioh.request.AddDeckCardsRequest;
-import danny.yugioh.request.DeckCardsDeckNamePlayerRequest;
-import danny.yugioh.request.DeckNamePlayerRequest;
+import danny.yugioh.request.*;
+import danny.yugioh.response.NewDeckCardsResponse;
 import danny.yugioh.service.IGameCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -26,8 +25,10 @@ public class GameCardService implements IGameCardService {
     IPlayerRepository playerRepository;
 
     @Override
-    public String newCard(AddCardRequest input) throws Exception {
-        //先看這張牌有沒有已經在牌庫池裡了
+    @Transactional(rollbackFor = Exception.class)
+    public String newCard(NewCardUseRequest input) throws Exception {
+        //卡片名稱沒有重複
+        //所以先看這張牌有沒有已經在牌庫池裡了
         Optional<GameCardUse> tmpCard = gameCardRepository.findCard(input.getCardname());
         if (tmpCard.isPresent()) {
             throw new Exception("新增的卡已經在卡池中了");
@@ -43,6 +44,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String newNoPlayerDeck(String input) {
         //單純新增一個孤兒牌組
         List<DeckList> all = deckListRepository.findAll();
@@ -53,39 +55,39 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
-    public String AddDeckCards(AddDeckCardsRequest input) throws Exception {
-        //先確認人，再確認牌組名，最後確認卡
-        Player tempplayer = cheackPlayer(input.getPlayerId());
-        List<DeckList> finddeckLists = tempplayer.getDeckLists();//該玩家的牌組清單
-        DeckList targetdeckList = new DeckList();
-        for (DeckList i : finddeckLists) {
-            if (i.getDeckname().equals(input.getDeckname())) {
-                targetdeckList = i;
-                break;
-            }
-            throw new Exception("這個玩家沒這個牌組啦");
-        }
-        //檢查一下想要加的卡是不是資料庫裡有的卡
-        List<String> addcarnameList = input.getCards();//想加的卡片
-        List<GameCardUse> addGameCard = new ArrayList<>();//符合可以加的卡片
-        for (String cardname : addcarnameList) {
-            Optional<GameCardUse> card = gameCardRepository.findCard(cardname);
-            if (card.isPresent()) {
-                addGameCard.add(card.get());
-            }
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public NewDeckCardsResponse newDeckCards(NewDeckCardsRequest input) throws Exception {
+        //確認要新增的對象在不在，三連
+        Player player = cheackPlayer(input.getPlayerId());//確認玩家
+        DeckList deckList = cheackPlayerDeck(input.getDeckname(), player);//確認牌組名稱
+        List<String> cardsname = input.getCardsname();
+        List<GameCardUse> cardsUseList = correctCardListFilter(cardsname);//篩選出有效的加入清單，並轉成卡片物件
         //依照遊戲王規則，牌組相同卡片不得放超過三張，所以要看看牌組裡的卡
-        List<GameCardUse> cardUseList = targetdeckList.getGameCardUseList();//該牌組目前的卡
-        for (GameCardUse i : addGameCard) {
-            if (Collections.frequency(cardUseList, i) < 3) {
-                cardUseList.add(i);
-            }
-        }
+        List<GameCardUse> gameCardUseList = deckList.getGameCardUseList();//該牌組目前的卡
+        NewDeckCardsResponse newDeckCardsResponse=new NewDeckCardsResponse();//回傳的東西
+        List<String> unmatchCards=new ArrayList<>();
 
-        return "新增卡片到牌組成功";
+        for (GameCardUse i : cardsUseList) {//對那些要加入的卡尋訪
+            int cnum=Collections.frequency(gameCardUseList, i);
+            if (cnum >= 3) {
+                unmatchCards.add(i.getCardname());
+            }else if(cnum<3){
+            gameCardUseList.add(i);}
+        }
+        deckList.setGameCardUseList(gameCardUseList);
+        deckListRepository.save(deckList);
+        if (unmatchCards.size()!=0){
+            newDeckCardsResponse.setCardsname(unmatchCards);
+            newDeckCardsResponse.setMessge("有卡片超過可用張數!");
+            return newDeckCardsResponse;
+        }else{
+            newDeckCardsResponse.setMessge("新增卡片到牌組成功!");
+            return newDeckCardsResponse;
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String changeDeckListCard(DeckCardsDeckNamePlayerRequest input) throws Exception {
         //一樣先確認人，再確認牌組名，最後確認卡
         Player player = cheackPlayer(input.getDuelistId());
@@ -105,6 +107,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteDeckPlayer(DeckNamePlayerRequest input) throws Exception {
         //這個部分要注意，只是要刪除牌組跟玩家的關聯，不能刪除掉該玩家的資料
         //玩家在不?
@@ -120,6 +123,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteDeckCard(DeckCardsDeckNamePlayerRequest input) throws Exception {
         //一樣先確認人，再確認牌組名，最後確認卡
         Player player = cheackPlayer(input.getDuelistId());
@@ -142,6 +146,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Player> queryDeckPlayer(String deckname) throws Exception {
         //用牌組名稱去找到符合所有條件的人
         List<DeckList> deckLists = deckListRepository.findallByname(deckname);
@@ -154,6 +159,7 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void queryDeckCard(List<String> Cards) throws Exception {
         //先看看這些卡是否合法
         List<GameCardUse> cardUseList = correctCardListFilter(Cards);
@@ -164,8 +170,6 @@ public class GameCardService implements IGameCardService {
         }
 
     }
-
-
 
     //方法1，判斷有無這個玩家
     private Player cheackPlayer(Integer id) throws Exception {

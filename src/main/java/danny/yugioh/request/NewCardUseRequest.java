@@ -1,6 +1,6 @@
 package danny.yugioh.request;
 
-public class AddCardRequest {
+public class NewCardUseRequest {
     private String cardname;
     private int atk;
     private int def;
