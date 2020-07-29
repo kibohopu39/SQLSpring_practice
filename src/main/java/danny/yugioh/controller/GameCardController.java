@@ -60,7 +60,7 @@ public class GameCardController {
     //多對多
     //查詢有放輸入卡片的所有牌組
     @GetMapping(value = "queryDeckCard")
-    public List<HashMap<String,String>> queryDeckCard(String card) throws Exception{
+    public HashMap<String,String> queryDeckCard(String card) throws Exception{
         return deckListService.queryDeckCard(card);
     }
     //多對多

@@ -77,10 +77,12 @@ public class GameCardService implements IGameCardService {
         }
         deckList.setGameCardUseList(gameCardUseList);
         deckListRepository.save(deckList);
-        if (unmatchCards.size()!=0){
+        if (unmatchCards.size()!=0) {
             newDeckCardsResponse.setCardsname(unmatchCards);
             newDeckCardsResponse.setMessge("有卡片超過可用張數!");
             return newDeckCardsResponse;
+
+
         }else{
             newDeckCardsResponse.setMessge("新增卡片到牌組成功!");
             return newDeckCardsResponse;

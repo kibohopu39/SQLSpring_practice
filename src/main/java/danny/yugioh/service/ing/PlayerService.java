@@ -8,7 +8,6 @@ import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IDetailRepository;
 import danny.yugioh.repository.IPlayerRepository;
 import danny.yugioh.request.*;
-import danny.yugioh.response.PlayerDeckResponse;
 import danny.yugioh.response.PlayerNameResponse;
 import danny.yugioh.service.IDeckListService;
 import danny.yugioh.service.IPlayerService;

@@ -74,20 +74,20 @@ public class DeckListService implements IDeckListService {
     }
 
     @Override
-    public List<HashMap<String,String>> queryDeckCard(String card) throws Exception {
+    public HashMap<String,String> queryDeckCard(String card) throws Exception {
         //輸入的卡牌是合理的嗎?
         HashMap<String,String> playerandDeck=new HashMap<>();
-        List<HashMap<String,String>> response=new ArrayList<>();
+//        List<HashMap<String,String>> response=new ArrayList<>();
         if (cheackCard(card)){
             Optional<GameCardUse> card1 = gameCardRepository.findCard(card);
             List<DeckList> deckListByCardname = deckListRepository.findDeckListByCardname(card1.get());
             for (DeckList d:deckListByCardname
                  ) {
                 playerandDeck.put(d.getDuelist().getName(),d.getDeckname());
-                response.add(playerandDeck);
+//                response.add(playerandDeck);
             }
         }
-        return response;
+        return playerandDeck;
     }
 
     //方法1，判斷有無這個玩家
