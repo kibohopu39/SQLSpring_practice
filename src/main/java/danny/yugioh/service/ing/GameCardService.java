@@ -154,20 +154,17 @@ public class GameCardService implements IGameCardService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<Player> queryDeckPlayer(java.lang.String deckname) throws Exception {
-        //用牌組名稱去找到符合所有條件的人
-        List<DeckList> deckLists = deckListRepository.findallByname(deckname);
-        List<Player> players = new ArrayList<>();
+    public List<String> queryDeckPlayer(String deckname) throws Exception {
+        //輸入的牌組名稱是否存在
+        List<DeckList> deckLists = checkDeckName(deckname);
+        List<String> names=new ArrayList<>();
         for (DeckList d : deckLists) {
-            Player duelist = d.getDuelist();
-            players.add(duelist);
+           names.add(d.getDuelist().getName());
         }
-        return players;
+        return names;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void queryDeckCard(List<java.lang.String> Cards) throws Exception {
         //先看看這些卡是否合法
         List<GameCardUse> cardUseList = correctCardListFilter(Cards);
@@ -210,5 +207,12 @@ public class GameCardService implements IGameCardService {
         }
         return addGameCard;
     }
-
+    //方法4，判斷有無這副牌組
+    private List<DeckList> checkDeckName(String inputDeckname) throws Exception{
+        List<DeckList> deckLists = deckListRepository.findallByname(inputDeckname);//可能會獲得不同人的相同牌組名稱
+        if (deckLists.isEmpty()){
+            throw new Exception("查無此牌組");
+        }
+        return deckLists;
+    }
 }

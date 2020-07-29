@@ -4,6 +4,8 @@ import danny.yugioh.request.*;
 import danny.yugioh.response.PlayerDeckResponse;
 import danny.yugioh.response.PlayerNameResponse;
 
+import java.util.List;
+
 public interface IPlayerService {
     String newDuelist(NewPlayerRequest input);
 
@@ -19,7 +21,7 @@ public interface IPlayerService {
 
     PlayerNameResponse queryPlayer(String gender);
 
-    PlayerDeckResponse queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception;
+    List<String> queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception;
 
     int changePlayerAndDeck(PlayerAndDeckRequest input) throws Exception;
 }

@@ -78,7 +78,7 @@ public class PlayerController {
     //一對多
     //查詢玩家某個牌組
     @GetMapping(value = "queryPlayerDeck")
-    public PlayerDeckResponse queryPlayerDeck(@RequestBody QueryPlayerDeckRequest input) throws Exception{
+    public List<String> queryPlayerDeck(@RequestBody QueryPlayerDeckRequest input) throws Exception{
         return playerService.queryPlayerDeck(input);
     }
 

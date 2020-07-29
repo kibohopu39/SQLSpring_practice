@@ -3,22 +3,22 @@ package danny.yugioh.request;
 import java.util.List;
 
 public class DeletePlayerDeckRequest {
-    List<String> DeckNameList;
-    Integer PlayerId;
+    List<String> deckNameList;
+    Integer playerId;
 
     public List<String> getDeckNameList() {
-        return DeckNameList;
+        return deckNameList;
     }
 
     public void setDeckNameList(List<String> deckNameList) {
-        DeckNameList = deckNameList;
+        this.deckNameList = deckNameList;
     }
 
     public Integer getPlayerId() {
-        return PlayerId;
+        return playerId;
     }
 
     public void setPlayerId(Integer playerId) {
-        PlayerId = playerId;
+        this.playerId = playerId;
     }
 }

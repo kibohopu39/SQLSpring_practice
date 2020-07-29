@@ -1,8 +1,10 @@
 package danny.yugioh.service.ing;
 
 import danny.yugioh.entity.DeckList;
+import danny.yugioh.entity.GameCardUse;
 import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
+import danny.yugioh.repository.IGameCardRepository;
 import danny.yugioh.repository.IPlayerRepository;
 import danny.yugioh.request.ChangeDeckNameRequest;
 import danny.yugioh.request.ChangeDeckPlayerRequest;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +25,8 @@ public class DeckListService implements IDeckListService {
     IDeckListRepository deckListRepository;
     @Autowired
     IPlayerRepository playerRepository;
-
+    @Autowired
+    IGameCardRepository gameCardRepository;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public java.lang.String changeDeckName(ChangeDeckNameRequest input) throws Exception {
@@ -56,7 +61,6 @@ public class DeckListService implements IDeckListService {
             olddeckList.setDuelist(player1);
             deckListRepository.save(olddeckList);
         }
-
         return "修改牌組名稱成功!";
     }
 
@@ -68,6 +72,24 @@ public class DeckListService implements IDeckListService {
 //        playerRepository.save(duelist);
         deckListRepository.save(deckList);
     }
+
+    @Override
+    public List<HashMap<String,String>> queryDeckCard(String card) throws Exception {
+        //輸入的卡牌是合理的嗎?
+        HashMap<String,String> playerandDeck=new HashMap<>();
+        List<HashMap<String,String>> response=new ArrayList<>();
+        if (cheackCard(card)){
+            Optional<GameCardUse> card1 = gameCardRepository.findCard(card);
+            List<DeckList> deckListByCardname = deckListRepository.findDeckListByCardname(card1.get());
+            for (DeckList d:deckListByCardname
+                 ) {
+                playerandDeck.put(d.getDuelist().getName(),d.getDeckname());
+                response.add(playerandDeck);
+            }
+        }
+        return response;
+    }
+
     //方法1，判斷有無這個玩家
     private Player cheackPlayer(Integer id) throws Exception {
         Optional<Player> player = playerRepository.findById(id);
@@ -93,6 +115,14 @@ public class DeckListService implements IDeckListService {
             if (i.getDeckname().equals(deckname)) {//有對應的名字就傳回
                 return false;
             }
+        }
+        return true;
+    }
+    //方法4，判斷卡牌是否合理
+    private Boolean cheackCard(String cardname)throws Exception{
+        Optional<GameCardUse> card = gameCardRepository.findCard(cardname);
+        if (!card.isPresent()) {
+            throw new Exception("沒有這張卡");
         }
         return true;
     }

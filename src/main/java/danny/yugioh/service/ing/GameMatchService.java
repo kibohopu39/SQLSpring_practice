@@ -30,6 +30,22 @@ public class GameMatchService implements IGameMatchService {
 
         return "參加成功";
     }
+
+    @Override
+    public String findCompititionPlayer(Integer gameName) throws Exception {
+        //先檢查賽事在不在
+        GameMatch gameMatch = cheackGameMatch(gameName);
+        List<Player> duelists = gameMatch.getDuelists();//獲取參加的玩家
+        String tmp="";
+        for (Player p:duelists) {
+            String name = p.getName();
+            tmp+=name+",";
+        }
+
+        return tmp;
+    }
+
+
     //方法1，判斷有無這個玩家
     private Player cheackPlayer(Integer id) throws Exception {
         Optional<Player> player = playerRepository.findById(id);
@@ -38,9 +54,17 @@ public class GameMatchService implements IGameMatchService {
         }
         return player.get();
     }
-    //方法2，判斷有無這個玩家
-    private GameMatch cheackGameMatch(java.lang.String gameMatchName) throws Exception {
+    //方法2，判斷有無這個賽事
+    private GameMatch cheackGameMatch(String gameMatchName) throws Exception {
         Optional<GameMatch> gameMatch = gameMatchRepository.findallByname(gameMatchName);
+        if (!gameMatch.isPresent()) {
+            throw new Exception("沒有這個賽事");
+        }
+        return gameMatch.get();
+    }
+    //方法3，判斷有無這個賽事2
+    private GameMatch cheackGameMatch(Integer gameId) throws Exception {
+        Optional<GameMatch> gameMatch = gameMatchRepository.findById(gameId);
         if (!gameMatch.isPresent()) {
             throw new Exception("沒有這個賽事");
         }

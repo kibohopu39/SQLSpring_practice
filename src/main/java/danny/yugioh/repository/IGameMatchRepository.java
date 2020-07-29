@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface IGameMatchRepository extends JpaRepository<GameMatch,Integer> {
-    @Query(value = "SELECT * from gamematch WHERE matchname LIKE:name",nativeQuery = true)
-    Optional<GameMatch> findallByname(@Param("name") java.lang.String name);
+    @Query(value = "SELECT gamematch FROM GameMatch gamematch WHERE gamematch.matchname LIKE:name")
+    Optional<GameMatch> findallByname(@Param("name") String name);
 
 
     @Query(value = "SELECT gamematch.matchname FROM GameMatch gamematch join gamematch.duelists tmp WHERE tmp = :gg  ")

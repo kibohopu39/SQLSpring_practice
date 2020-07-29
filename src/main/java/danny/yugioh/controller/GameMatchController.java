@@ -27,15 +27,23 @@ public class GameMatchController {
     public java.lang.String joinGame(@RequestBody GamePlayerRequest input)throws Exception{
         return gameMatchService.joinGame(input);
     }
+
     //========用用看 Stream 猜選並搜尋符合條件的結果
     @GetMapping(value = "findMatchGamePlayer")
-    public java.lang.String findMatchGamePlayer()throws Exception{
+    public java.lang.String findMatchGamePlayer(Integer input)throws Exception{
         //我要找台南2001店家賽的參賽選手
-        Optional<Player> byId = playerRepository.findById(1);
+        Optional<Player> byId = playerRepository.findById(input);
         Player player = byId.get();
         List<java.lang.String> gameMatches = gameMatchRepository.gofingGameMatches(player);
 //        List<GameMatch> collect = gameMatches.stream().filter(name -> !"台南2001店家賽".equals(name)).collect(Collectors.toList());
         java.lang.String s = gameMatches.get(0);
         return s;
+    }
+
+
+    //找參加指定賽事的所有玩家
+    @GetMapping(value = "compititionPlayer")
+    public String findCompititionPlayer(Integer gameName) throws Exception{
+        return gameMatchService.findCompititionPlayer(gameName);
     }
 }

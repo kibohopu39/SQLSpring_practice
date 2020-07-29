@@ -2,6 +2,7 @@ package danny.yugioh.service.ing;
 
 import danny.yugioh.entity.DeckList;
 import danny.yugioh.entity.Detail;
+import danny.yugioh.entity.GameCardUse;
 import danny.yugioh.entity.Player;
 import danny.yugioh.repository.IDeckListRepository;
 import danny.yugioh.repository.IDetailRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,7 +150,7 @@ public class PlayerService implements IPlayerService {
     }
 
     @Override
-    public PlayerNameResponse queryPlayer(java.lang.String gender) {
+    public PlayerNameResponse queryPlayer(String gender) {
         //查詢到符合的玩家
         List<Player> playersByGender = playerRepository.findPlayersByGender(gender);
         PlayerNameResponse playerName = new PlayerNameResponse();//傳出的東西
@@ -160,19 +162,19 @@ public class PlayerService implements IPlayerService {
     }
 
     @Override
-    public PlayerDeckResponse queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception {
+    public List<String> queryPlayerDeck(QueryPlayerDeckRequest input) throws Exception {
         //玩家在否?
         Player player = cheackPlayer(input.getPlayerId());
         //牌組在不?
-        List<java.lang.String> deckNameList = input.getDeckNameList();
-        //要回傳用的
-        PlayerDeckResponse playerDeck = new PlayerDeckResponse();
-        List<DeckList> deckLists = playerDeck.getDeckLists();
-        for (java.lang.String deckname : deckNameList) {
-            DeckList deckList = cheackPlayerDeck(deckname, player);//傳出玩家符合的牌組
-            deckLists.add(deckList);
+        DeckList deckList = cheackPlayerDeck(input.getDeckNameList().get(0), player);
+        List<GameCardUse> gameCardUseList = deckList.getGameCardUseList();
+        List<String> listresponse=new ArrayList<>();
+        //尋訪牌組內的牌，並把名稱給回傳
+        for (GameCardUse card : gameCardUseList) {
+            listresponse.add(card.getCardname());
         }
-        return playerDeck;
+        //要排序嗎?
+        return listresponse;
     }
 
     @Override

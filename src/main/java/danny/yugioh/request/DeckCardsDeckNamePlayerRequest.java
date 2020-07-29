@@ -6,7 +6,6 @@ import java.util.List;
 public class DeckCardsDeckNamePlayerRequest {
     private List<String> cardsList;
     //想要修改誰的牌組
-    @NotBlank
     private int duelistId;
     //想要修改哪個牌組
     @NotBlank

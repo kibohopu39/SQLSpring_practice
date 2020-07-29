@@ -10,7 +10,7 @@ public class Picture implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
     @Column(name = "picname")
-    private Player name;
+    private String name;
     @Column(name = "pic")
     private byte[] BlobTypedata;
 
@@ -22,11 +22,11 @@ public class Picture implements Serializable {
         Id = id;
     }
 
-    public Player getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Player name) {
+    public void setName(String name) {
         this.name = name;
     }
 

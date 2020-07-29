@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -37,43 +38,30 @@ public class GameCardController {
     //新增指定牌組內的卡片(就是卡片跟牌組建立關聯)
     @PutMapping(value = "newDeckCards")
     public NewDeckCardsResponse newDeckCards(@RequestBody NewDeckCardsRequest input)throws Exception{return gameCardService.newDeckCards(input);    }
-
-
-
-
-
     //多對一
     //刪除牌組的持有人
     @PutMapping(value = "deleteDeckplayer")
-    public java.lang.String deleteDeckPlayer(@RequestBody DeletePlayerDeckRequest input)throws Exception{
-        return gameCardService.deleteDeckPlayer(input);
-    }
+    public java.lang.String deleteDeckPlayer(@RequestBody DeletePlayerDeckRequest input)throws Exception{ return gameCardService.deleteDeckPlayer(input);    }
     //多對一
     //查詢某個牌組的擁有者
     @GetMapping(value = "queryDeckPlayer")
-    public List<Player> queryDeckPlayer(@RequestBody java.lang.String deckname)throws Exception{
-        return gameCardService.queryDeckPlayer(deckname);
-    }
-
+    public List<String> queryDeckPlayer(String deckname)throws Exception{ return gameCardService.queryDeckPlayer(deckname);    }
     //多對多
     //修改指定決鬥者牌組的卡片--->請問你跟上面那位不是一樣嗎?
     @PutMapping(value = "changedeckcard")
     public java.lang.String changeDeckCard(@RequestBody @Valid DeckCardsDeckNamePlayerRequest input) throws Exception{
         return gameCardService.changeDeckListCard(input);
     }
-
     //多對多
     //刪除牌組的卡
     @PutMapping(value = "deleteDeckCard")
-    public java.lang.String deleteDeckCard(@RequestBody @Valid DeckCardsDeckNamePlayerRequest input)throws Exception{
-        return gameCardService.deleteDeckCard(input);
-    }
+    public java.lang.String deleteDeckCard(@RequestBody @Valid DeckCardsDeckNamePlayerRequest input)throws Exception{ return gameCardService.deleteDeckCard(input);    }
 
     //多對多
     //查詢有放輸入卡片的所有牌組
     @GetMapping(value = "queryDeckCard")
-    public void queryDeckCard(@RequestBody List<java.lang.String> Cards) throws Exception{
-
+    public List<HashMap<String,String>> queryDeckCard(String card) throws Exception{
+        return deckListService.queryDeckCard(card);
     }
     //多對多
     //查詢某張卡被放到那些牌組裡

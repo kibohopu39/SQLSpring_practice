@@ -14,6 +14,6 @@ public interface IGameCardService {
     java.lang.String newNoPlayerDeck(java.lang.String input);
     java.lang.String deleteDeckPlayer(DeletePlayerDeckRequest input)throws Exception;
     java.lang.String deleteDeckCard(DeckCardsDeckNamePlayerRequest input) throws Exception;
-    List<Player> queryDeckPlayer(java.lang.String deckname)throws Exception;
+    List<String> queryDeckPlayer(java.lang.String deckname)throws Exception;
     void queryDeckCard(List<java.lang.String> Cards) throws Exception;
 }
